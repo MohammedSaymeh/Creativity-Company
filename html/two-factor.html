@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Two-Factor Authentication | Creative Company</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/two-factor.css" />
+  <link rel="icon" href="../images/logo.ico" type="image/png" />
+</head>
+<body class="twofactor-page">
+  <button id="theme-toggle" class="toggle-theme-btn">🌙 Dark Mode</button>
+
+  <div class="form-card">
+    <div class="form-left">
+      <img src="../images/logo.png" class="logo" />
+      <h2>Two-Factor Verification</h2>
+    </div>
+    <div class="form-right">
+      <form onsubmit="return false;">
+        <p>Please enter the 6-digit code sent to your email or phone.</p>
+
+        <div class="code-inputs">
+          <input type="text" maxlength="1" class="code-box" oninput="moveToNext(this, 1)" />
+          <input type="text" maxlength="1" class="code-box" oninput="moveToNext(this, 2)" />
+          <input type="text" maxlength="1" class="code-box" oninput="moveToNext(this, 3)" />
+          <input type="text" maxlength="1" class="code-box" oninput="moveToNext(this, 4)" />
+          <input type="text" maxlength="1" class="code-box" oninput="moveToNext(this, 5)" />
+          <input type="text" maxlength="1" class="code-box" />
+        </div>
+
+        <!-- <button type="submit">Confirm</button> -->
+         <button type="button" onclick="verifyCode()">Confirm</button>
+
+        <p class="resend-section">
+          Didn't receive the code? <a href="#" onclick="resendCode()">Resend</a>
+          <span id="timer">(30s)</span>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function moveToNext(current, index) {
+      if (current.value && index < 6) {
+        document.getElementsByClassName('code-box')[index].focus();
+      }
+    }
+
+    let timeLeft = 30;
+    const timer = document.getElementById("timer");
+    let interval = setInterval(() => {
+      timeLeft--;
+      if (timeLeft > 0) {
+        timer.textContent = `(${timeLeft}s)`;
+      } else {
+        timer.textContent = "";
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    function resendCode() {
+      alert("A new code has been sent.");
+      timeLeft = 30;
+      interval = setInterval(() => {
+        timeLeft--;
+        timer.textContent = `(${timeLeft}s)`;
+        if (timeLeft <= 0) clearInterval(interval);
+      }, 1000);
+    }
+  </script>
+
+  <script>
+  function verifyCode() {
+    const boxes = document.querySelectorAll('.code-box');
+    let code = "";
+
+    boxes.forEach(box => {
+      code += box.value.trim();
+    });
+
+    if (code.length === 6 && /^[0-9]{6}$/.test(code)) {
+      window.location.href = "dashboard.html";
+    } else {
+      alert("Please enter a valid 6-digit code.");
+    }
+  }
+</script>
+
+<script>
+  const toggleBtn = document.getElementById("theme-toggle");
+  const userTheme = localStorage.getItem("theme");
+
+  if (userTheme === "dark") {
+    document.documentElement.classList.add("dark");
+    toggleBtn.textContent = "☀️ Light Mode";
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    document.documentElement.classList.toggle("dark");
+    const isDark = document.documentElement.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    toggleBtn.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+  });
+</script>
+
+</body>
+</html>

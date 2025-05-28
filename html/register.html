@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register | Creative Company</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/register.css" />
+  <link rel="icon" href="../images/logo.ico" type="image/png" />
+</head>
+<body class="register-page">
+
+  <button id="theme-toggle" class="toggle-theme-btn">🌙 Dark Mode</button>
+
+
+  <div class="form-card">
+    <!-- Left -->
+    <div class="form-left">
+      <img src="../images/logo.png" alt="Company Logo" class="logo" />
+      <h2>Welcome to Creative Co.</h2>
+    </div>
+
+    <!-- Right -->
+    <div class="form-right">
+      <form>
+        <div class="form-row">
+          <div class="column">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required />
+          </div>
+
+          <div class="column">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="password" name="password" oninput="checkStrength()" required />
+              <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+            </div>
+
+            <div id="strength-text" class="strength-text"></div>
+            <div class="strength-bar"><div id="strength-fill"></div></div>
+
+            <label for="confirm">Confirm Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="confirm" name="confirm" required />
+              <span class="toggle-password" onclick="togglePassword('confirm')">👁️</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="terms-box">
+          <input type="checkbox" id="agree" onclick="checkAgreement()" />
+          <label for="agree">
+            I agree to the <a href="#" onclick="showModal()">terms & conditions</a>
+          </label>
+        </div>
+
+        <button type="submit" id="register-btn" disabled>Register</button>
+        <p>Already have an account? <a href="login.html">Login</a></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="terms-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="hideModal()">&times;</span>
+      <h3>Terms & Conditions</h3>
+      <p>By registering, you agree to our policies and terms of service.</p>
+    </div>
+  </div>
+
+  <script>
+    function togglePassword(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    function checkStrength() {
+      const password = document.getElementById("password").value;
+      const fill = document.getElementById("strength-fill");
+      const text = document.getElementById("strength-text");
+      let strength = 0;
+
+      if (password.length >= 6) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[@$!%*?&]/.test(password)) strength++;
+
+      if (strength <= 1) {
+        fill.style.width = "30%";
+        fill.style.background = "red";
+        text.textContent = "Weak password";
+      } else if (strength <= 3) {
+        fill.style.width = "60%";
+        fill.style.background = "orange";
+        text.textContent = "Moderate password";
+      } else {
+        fill.style.width = "100%";
+        fill.style.background = "green";
+        text.textContent = "Strong password";
+      }
+    }
+
+    function checkAgreement() {
+      const checkbox = document.getElementById("agree");
+      const button = document.getElementById("register-btn");
+      button.disabled = !checkbox.checked;
+    }
+
+    function showModal() {
+      document.getElementById("terms-modal").style.display = "block";
+    }
+
+    function hideModal() {
+      document.getElementById("terms-modal").style.display = "none";
+    }
+  </script>
+
+  <script>
+  const toggleBtn = document.getElementById("theme-toggle");
+  const userTheme = localStorage.getItem("theme");
+
+  if (userTheme === "dark") {
+    document.documentElement.classList.add("dark");
+    toggleBtn.textContent = "☀️ Light Mode";
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    document.documentElement.classList.toggle("dark");
+    const isDark = document.documentElement.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    toggleBtn.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+  });
+</script>
+
+</body>
+</html>
